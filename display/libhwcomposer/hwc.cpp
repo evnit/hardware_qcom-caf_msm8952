@@ -21,7 +21,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include <cutils/log.h>
+#include <log/log.h>
 #include <cutils/atomic.h>
 #include <EGL/egl.h>
 #include <utils/Trace.h>
@@ -606,7 +606,6 @@ static int hwc_setPowerMode(struct hwc_composer_device_1* dev, int dpy,
         }
         //Deliberate fall through since there is no explicit power mode for
         //virtual displays.
-            FALLTHROUGH_INTENDED;
     case HWC_DISPLAY_VIRTUAL:
         if(ctx->dpyAttr[HWC_DISPLAY_VIRTUAL].connected) {
             const int dpy = HWC_DISPLAY_VIRTUAL;

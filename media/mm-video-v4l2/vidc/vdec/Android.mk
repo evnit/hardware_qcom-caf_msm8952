@@ -77,15 +77,11 @@ libmm-vdec-inc          += $(TOP)/frameworks/native/libs/arect/include
 libmm-vdec-inc          += $(TOP)/frameworks/native/libs/nativebase/include
 endif
 libmm-vdec-inc      	+= $(TARGET_OUT_HEADERS)/mm-video/SwVdec
-libmm-vdec-inc      	+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 
 ifeq ($(PLATFORM_SDK_VERSION), 18)  #JB_MR2
 libmm-vdec-def += -DANDROID_JELLYBEAN_MR2=1
 libmm-vdec-inc += $(TOP)/$(call project-path-for,qcom-media)/libstagefrighthw
 endif
-
-# Common Dependencies
-libmm-vdec-add-dep := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
 
 ifeq ($(call is-platform-sdk-version-at-least, 19),true)
 # This feature is enabled for Android KK+
@@ -112,7 +108,6 @@ LOCAL_MODULE_TAGS               := optional
 LOCAL_VENDOR_MODULE             := true
 LOCAL_CFLAGS                    := $(libmm-vdec-def) -Werror -Wno-error
 LOCAL_C_INCLUDES                += $(libmm-vdec-inc)
-LOCAL_ADDITIONAL_DEPENDENCIES   := $(libmm-vdec-add-dep)
 
 LOCAL_PRELINK_MODULE    := false
 LOCAL_SHARED_LIBRARIES  := liblog libutils libui libcutils libdl
@@ -121,6 +116,8 @@ LOCAL_SHARED_LIBRARIES  += libqdMetaData
 
 LOCAL_HEADER_LIBRARIES  := media_plugin_headers
 
+LOCAL_HEADER_LIBRARIES  += generated_kernel_headers
+
 LOCAL_SRC_FILES         := src/frameparser.cpp
 LOCAL_SRC_FILES         += src/h264_utils.cpp
 LOCAL_SRC_FILES         += src/ts_parser.cpp
@@ -128,9 +125,7 @@ LOCAL_SRC_FILES         += src/mp4_utils.cpp
 LOCAL_SRC_FILES         += src/hevc_utils.cpp
 LOCAL_STATIC_LIBRARIES  := libOmxVidcCommon
 LOCAL_SRC_FILES         += src/omx_vdec_msm8974.cpp
-# LOCAL_CLANG := false
 LOCAL_CFLAGS            += -Wno-error
-
 include $(BUILD_SHARED_LIBRARY)
 
 
@@ -150,7 +145,8 @@ LOCAL_MODULE_TAGS               := optional
 LOCAL_VENDOR_MODULE             := true
 LOCAL_CFLAGS                    := $(libmm-vdec-def)
 LOCAL_C_INCLUDES                += $(libmm-vdec-inc)
-LOCAL_ADDITIONAL_DEPENDENCIES   := $(libmm-vdec-add-dep)
+
+LOCAL_HEADER_LIBRARIES := generated_kernel_headers
 
 LOCAL_PRELINK_MODULE    := false
 LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl
